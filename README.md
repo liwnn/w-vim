@@ -1,0 +1,2 @@
+# w-vim
+vim config
