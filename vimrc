@@ -262,7 +262,7 @@ func! CompileRun()
     elseif &filetype == "python"
         exec "AsyncRun -raw python %"
     elseif &filetype == "go"
-        exec "AsyncRun! go run %"
+        exec "AsyncRun! -raw go run %"
     elseif &filetype == "objc" || &filetype == "cpp" || &filetype == "c" || &filetype == "cs" || &filetype == "java"
         if &filetype == "objc"
             exec "AsyncRun g++ -framework Foundation % -o %<"
