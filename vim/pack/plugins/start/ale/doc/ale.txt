@@ -145,6 +145,8 @@ CONTENTS                                                         *ale-contents*
       write-good..........................|ale-markdown-write-good|
     mercury...............................|ale-mercury-options|
       mmc.................................|ale-mercury-mmc|
+    nasm..................................|ale-nasm-options|
+      nasm................................|ale-nasm-nasm|
     nroff.................................|ale-nroff-options|
       write-good..........................|ale-nroff-write-good|
     objc..................................|ale-objc-options|
@@ -360,6 +362,7 @@ Notes:
 * Markdown: `alex`!!, `markdownlint`!!, `mdl`, `prettier`, `proselint`, `redpen`, `remark-lint`, `textlint`, `vale`, `write-good`
 * MATLAB: `mlint`
 * Mercury: `mmc`!!
+* NASM: `nasm`!!
 * Nim: `nim check`!!
 * nix: `nix-instantiate`
 * nroff: `alex`!!, `proselint`, `write-good`
@@ -471,6 +474,12 @@ based on regular expressions for filenames. For configuring entire projects,
 the buffer-local options can be used with external plugins for reading Vim
 project configuration files. Buffer-local settings can also be used in
 ftplugin files for different filetypes.
+
+ALE offers several options for controlling which linters are run.
+
+* Selecting linters to run.            - |g:ale_linters|
+* Aliasing filetypes for linters       - |g:ale_linter_aliases|
+* Only running linters you asked for.  - |g:ale_linters_explicit|
 
 
 ===============================================================================
@@ -631,6 +640,9 @@ delay for completion can be configured with |g:ale_completion_delay|. ALE will
 only suggest so many possible matches for completion. The maximum number of
 items can be controlled with |g:ale_completion_max_suggestions|.
 
+If you don't like some of the suggestions you see, you can filter them out
+with |g:ale_completion_excluded_words| or |b:ale_completion_excluded_words|.
+
 
 -------------------------------------------------------------------------------
 5.2 Go To Definition                                     *ale-go-to-definition*
@@ -662,6 +674,12 @@ at the cursor taken from LSP linters. The following commands are supported:
 
 |ALEHover| - Print information about the symbol at the cursor.
 
+If |b:ale_set_balloons| is set to `1` and your version of Vim supports the
+|balloon_show()| function, then "hover" information also show up when you move
+the mouse over a symbol in a buffer. Diagnostic information will take priority
+over hover information for balloons. If a line contains a problem, that
+problem will be displayed in a balloon instead of hover information.
+
 
 ===============================================================================
 6. Global Options                                                 *ale-options*
@@ -680,7 +698,7 @@ g:airline#extensions#ale#enabled             *g:airline#extensions#ale#enabled*
 g:ale_cache_executable_check_failures   *g:ale_cache_executable_check_failures*
 
   Type: |Number|
-  Default: `0`
+  Default: undefined
 
   When set to `1`, ALE will cache failing executable checks for linters. By
   default, only executable checks which succeed will be cached.
@@ -762,6 +780,24 @@ g:ale_completion_enabled                             *g:ale_completion_enabled*
 
   See |ale-completion|
 
+
+g:ale_completion_excluded_words               *g:ale_completion_excluded_words*
+                                              *b:ale_completion_excluded_words*
+  Type: |List|
+  Default: `[]`
+
+  This option can be set to a list of |String| values for "words" to exclude
+  from completion results, as in the words for |complete-items|. The strings
+  will be matched exactly in a case-sensitive manner. (|==#|)
+
+  This setting can be configured in ftplugin files with buffer variables, so
+  that different lists can be used for different filetypes. For example: >
+
+  " In ~/.vim/ftplugin/typescript.vim
+
+  " Don't suggest `it` or `describe` so we can use snippets for those words.
+  let b:ale_completion_excluded_words = ['it', 'describe']
+<
 
 g:ale_completion_max_suggestions             *g:ale_completion_max_suggestions*
 
@@ -860,20 +896,6 @@ g:ale_echo_msg_warning_str                         *g:ale_echo_msg_warning_str*
   Default: `'Warning'`
 
   The string used for `%severity%` for warnings. See |g:ale_echo_msg_format|
-
-
-g:ale_emit_conflict_warnings                     *g:ale_emit_conflict_warnings*
-
-  Type: |Number|
-  Default: `1`
-
-  When set to `0`, ALE will not emit any warnings on startup about conflicting
-  plugins. ALE will probably not work if other linting plugins are installed.
-
-  When this option is set to `1`, ALE will add its `after` directory to
-  |runtimepath| automatically, so the checks can be applied. Setting this
-  option to `0` before ALE is loaded will prevent ALE from modifying
-  |runtimepath|.
 
 
 g:ale_enabled                                                   *g:ale_enabled*
@@ -1085,8 +1107,12 @@ g:ale_linter_aliases                                     *g:ale_linter_aliases*
   following values: >
 
   {
-  \   'zsh': 'sh',
+  \   'Dockerfile': 'dockerfile',
   \   'csh': 'sh',
+  \   'plaintex': 'tex',
+  \   'systemverilog': 'verilog',
+  \   'vimwiki': 'markdown',
+  \   'zsh': 'sh',
   \}
 <
   For example, if you wish to map a new filetype `'foobar'` to run the `'php'`
@@ -1245,7 +1271,7 @@ g:ale_max_signs                                               *g:ale_max_signs*
 g:ale_maximum_file_size                               *g:ale_maximum_file_size*
                                                       *b:ale_maximum_file_size*
   Type: |Number|
-  Default: `0`
+  Default: undefined
 
   A maximum file size in bytes for ALE to check. If set to any positive
   number, ALE will skip checking files larger than the given size.
@@ -1326,16 +1352,37 @@ g:ale_set_balloons                                         *g:ale_set_balloons*
                                                            *b:ale_set_balloons*
 
   Type: |Number|
-  Default: `has('balloon_eval')`
+  Default: `(has('balloon_eval') && has('gui_running'))`
+           `|| (has('balloon_eval_term') && !has('gui_running'))`
 
   When this option is set to `1`, balloon messages will be displayed for
-  problems. Problems nearest to the cursor on the line the cursor is over will
-  be displayed. Balloons will not be shown when either |g:ale_enabled| is `0`
-  or |b:ale_enabled| is `0`.
+  problems or hover information if available.
+
+  Problems nearest to the line the mouse cursor is over will be displayed. If
+  there are no problems to show, and one of the linters is an LSP linter
+  supporting "Hover" information, per |ale-hover|, then brief information
+  about the symbol under the cursor will be displayed in a balloon.
 
   `b:ale_set_balloons` can be set to `0` to disable balloons for a buffer.
   Balloons cannot be enabled for a specific buffer when not initially enabled
   globally.
+
+  Balloons will not be shown when |g:ale_enabled| or |b:ale_enabled| is `0`.
+
+
+g:ale_set_balloons_legacy_echo                 *g:ale_set_balloons_legacy_echo*
+                                               *b:ale_set_balloons_legacy_echo*
+  Type: |Number|
+  Default: undefined
+
+  If set to `1`, moving your mouse over documents in Vim will make ALE ask
+  `tsserver` or `LSP` servers for information about the symbol where the mouse
+  cursor is, and print that information into Vim's echo line. This is an
+  option for supporting older versions of Vim which do not properly support
+  balloons in an asynchronous manner.
+
+  If your version of Vim supports the |balloon_show| function, then this
+  option does nothing meaningful.
 
 
 g:ale_set_highlights                                     *g:ale_set_highlights*
@@ -2272,14 +2319,17 @@ ale#linter#Define(filetype, linter)                       *ale#linter#Define()*
                          process for a language server runnning, and
                          communicates with it directly via a |channel|.
 
-                         When this argument is not empty, `project_callback`
-                         must be defined, and only one of either `language` or
-                         `language_callback` must be defined.
+                         When this argument is not empty, only one of either
+                         `language` or `language_callback` must be defined,
+                         and `project_root_callback` must be defined.
 
                          LSP linters handle diagnostics automatically, so
                          the `callback` argument must not be defined.
 
-  `project_callback`       A |String| or |Funcref| for a callback function
+                         An optional `completion_filter` callback may be
+                         defined for filtering completion results.
+
+  `project_root_callback`  A |String| or |Funcref| for a callback function
                          accepting a buffer number. A |String| should be
                          returned representing the path to the project for the
                          file being checked with the language server. If an
@@ -2303,6 +2353,15 @@ ale#linter#Define(filetype, linter)                       *ale#linter#Define()*
 
                          This option can be used instead of `language` if a
                          linter can check multiple languages.
+
+  `completion_filter`      A |String| or |Funcref| for a callback function
+                         accepting a buffer number and a completion item.
+
+                         The completion item will be a |Dictionary| following
+                         the Language Server Protocol `CompletionItem`
+                         interface as described in the specification,
+                         available online here:
+                         https://microsoft.github.io/language-server-protocol
 
   `aliases`                A |List| of aliases for the linter name.
 
@@ -2459,7 +2518,15 @@ ALEFixPost                                                 *ALEFixPost-autocmd*
         autocmd User ALELintPre  let s:ale_running = 1 | redrawstatus
         autocmd User ALELintPost let s:ale_running = 0 | redrawstatus
     augroup end
+
 <
+ALEJobStarted                                           *ALEJobStarted-autocmd*
+
+  This |User| autocommand is triggered immediately after a job is successfully
+  run. This provides better accuracy for checking linter status with
+  |ale#engine#IsCheckingBuffer()| over |ALELintPre-autocmd|, which is actually
+  triggered before any linters are executed.
+
 
 ===============================================================================
 10. Special Thanks                                         *ale-special-thanks*

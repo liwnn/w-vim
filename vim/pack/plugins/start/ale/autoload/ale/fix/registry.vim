@@ -190,6 +190,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['perl'],
 \       'description': 'Fix Perl files with perltidy.',
 \   },
+\   'xo': {
+\       'function': 'ale#fixers#xo#Fix',
+\       'suggested_filetypes': ['javascript'],
+\       'description': 'Fix JavaScript files using xo --fix.',
+\   },
 \}
 
 " Reset the function registry to the default entries.
@@ -327,7 +332,7 @@ endfunction
 
 " Function that returns autocomplete candidates for ALEFix command
 function! ale#fix#registry#CompleteFixers(ArgLead, CmdLine, CursorPos) abort
-    return ale#fix#registry#GetApplicableFixers(&filetype)
+    return filter(ale#fix#registry#GetApplicableFixers(&filetype), 'v:val =~? a:ArgLead')
 endfunction
 
 " Suggest functions to use from the registry.
