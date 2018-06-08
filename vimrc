@@ -209,6 +209,7 @@ let g:mucomplete#can_complete.go = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\)$' } }
 " netrw
 let g:netrw_home=$VIMTEMP
 let g:netrw_sort_sequence = '[\/]$,*'
+let g:netrw_liststyle= 3
 
 "Nerd_commenter
 let NERDCommentEmptyLines = 1
