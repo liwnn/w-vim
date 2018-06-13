@@ -108,6 +108,7 @@ set ignorecase
 set smartcase
 nnoremap <Leader>f :vim /<C-R><C-W>/j %<CR>:copen<CR>:wincmd p<CR>:wincmd p<CR>:wincmd p<CR>
 nnoremap <F3> ms:%s/\<<C-R>=expand("<cword>")<CR>\>//gen<cr>`sviw
+nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 autocmd BufEnter *
             \ if &buftype == 'quickfix' |
             \     exe 'unmap <2-LeftMouse>' |
@@ -171,14 +172,6 @@ function! MakeSession()
         call writefile([data], $VIMTEMP . '/vimsize')
     endif
 endfunc
-
-" incsearch
-if has("gui_running")
-    map / <Plug>(incsearch-forward)
-    map ? <Plug>(incsearch-backward)
-    map g/ <Plug>(incsearch-stay)
-end
-nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
 
 "snipMate
 let g:snippets_dir = $VIMFILES . "/snippets"
