@@ -11,8 +11,7 @@ else
     let g:os = 'linux'
 endif
 let $VIMTEMP=$HOME.'/.cache/vimtemp'
-if !isdirectory($HOME.'/.cache') | call mkdir($HOME.'/.cache') | endif
-if !isdirectory($VIMTEMP) | call mkdir($VIMTEMP) | endif
+if !isdirectory($VIMTEMP) | call mkdir($VIMTEMP, "p") | endif
 
 "General
 set encoding=utf-8
@@ -21,20 +20,21 @@ set autochdir
 set splitright
 set lazyredraw
 set noerrorbells
-set shortmess=filnxtToOc
 set belloff=all
+set shortmess=filnxtToOc
 filetype plugin indent on
 syntax on
 
 "View
+set number
+set cursorline
 set wildmenu
 set guioptions-=T
 set guitablabel=%{fnamemodify(bufname(tabpagebuflist(v:lnum)[tabpagewinnr(v:lnum)-1]),':t')}
 set display=lastline
-set cursorline
 set listchars=tab:»\ ,trail:·
-set list
 autocmd FileType go setlocal listchars=tab:\¦\ ,trail:·
+set list
 set laststatus=2
 set statusline=%F%m%r%0*%=%0*%k%1*\ %{&filetype}\ %2*\ Ln\ %l\ \ Col\ %c\ \ %L\ %3*\ %{&ff}\ %4*%(\ %{&fenc.(&bomb?\"\(BOM\)\":\"\")}\ %)%*
 set t_Co=256
@@ -69,7 +69,6 @@ if has("gui_running")
 endif
 
 "Edit
-set number
 set expandtab
 set shiftwidth=4
 set linebreak
@@ -210,7 +209,6 @@ let NERDDefaultAlign = 'both' " left start both none
 
 "vbookmark
 let g:vbookmark_bookmarkSaveFile = $VIMTEMP . '/.vimbookmark'
-nnoremap <silent> <C-F2> :VbookmarkToggle<CR>
 nnoremap <silent> <F2> :VbookmarkNext<CR>
 nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
 
@@ -248,6 +246,8 @@ let g:go_list_height = 10
 let g:go_fold_enable = ['block', 'import', 'varconst', 'package_comment', 'comment']
 
 "Tools
+noremap <silent> <F5> :call CompileRun() <CR>
+noremap <Leader>o :call OpenContainerFolder() <CR><CR>
 func! CompileRun()
     exec ":w"
     let g:asyncrun_open = 10
@@ -304,6 +304,3 @@ function! OpenContainerFolder()
         endif
     endif
 endfunc "OpenContainerFolder
-
-noremap <silent> <F5> :call CompileRun() <CR>
-noremap <Leader>o :call OpenContainerFolder() <CR><CR>
