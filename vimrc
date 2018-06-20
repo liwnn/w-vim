@@ -29,6 +29,7 @@ syntax on
 set number
 set cursorline
 set wildmenu
+set balloondelay=300
 set guioptions-=T
 set guitablabel=%{fnamemodify(bufname(tabpagebuflist(v:lnum)[tabpagewinnr(v:lnum)-1]),':t')}
 set display=lastline
@@ -64,9 +65,6 @@ if color_name == ''
 elseif color_name != 'default'
     exe 'colorscheme ' . color_name
 end
-if has("gui_running")
-    set balloondelay=300
-endif
 
 "Edit
 set expandtab
