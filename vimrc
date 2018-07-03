@@ -195,6 +195,11 @@ noremap <C-S-TAB> :MBEbp<CR>
 let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#can_complete = {}
 let g:mucomplete#can_complete.go = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\)$' } }
+let g:mucomplete#chains = {}
+if !(has('python') || has('python3'))
+  " Define whatever completion chain you want, but without 'omni':
+  let g:mucomplete#chains.python = ['path', 'keyn']
+endif
 
 " netrw
 let g:netrw_home=$VIMTEMP
