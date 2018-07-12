@@ -307,3 +307,7 @@ function! OpenContainerFolder()
         endif
     endif
 endfunc "OpenContainerFolder
+
+call plug#begin('~/.vim/pack/plugins/start')
+Plug 'fatih/vim-go', { 'tag': '*' }
+call plug#end()
