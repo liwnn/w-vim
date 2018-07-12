@@ -308,6 +308,12 @@ function! OpenContainerFolder()
     endif
 endfunc "OpenContainerFolder
 
-call plug#begin('~/.vim/pack/plugins/start')
+call plug#begin("vim/pack/plugins/start")
 Plug 'fatih/vim-go', { 'tag': '*' }
+Plug 'w0rp/ale', { 'tag': '*' }
+Plug 'lifepillar/vim-mucomplete', { 'tag': '*' }
+Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'majutsushi/tagbar'
+Plug 'msanders/snipmate.vim'
 call plug#end()
