@@ -74,7 +74,9 @@ set shiftwidth=4
 set linebreak
 set backspace=indent,eol,start
 set whichwrap=b,s,h,l,<,>,[,]
-set completeopt=menuone,longest,noinsert
+if has('insert_expand')
+    set completeopt=menuone,longest,noinsert
+endif
 set cino=:0g0t0(sus
 set mouse=a
 set clipboard=unnamed,unnamedplus
