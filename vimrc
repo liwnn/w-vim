@@ -108,12 +108,6 @@ set smartcase
 nnoremap <Leader>f :vim /<C-R><C-W>/j %<CR>:copen<CR>:wincmd p<CR>:wincmd p<CR>:wincmd p<CR>
 nnoremap <F3> ms:%s/\<<C-R>=expand("<cword>")<CR>\>//gen<cr>`sviw
 nnoremap <Esc><Esc> :<C-u>nohlsearch<CR>
-autocmd BufEnter *
-            \ if &buftype == 'quickfix' |
-            \     exe 'unmap <2-LeftMouse>' |
-            \ elseif &buftype == '' |
-            \     exe 'noremap <2-LeftMouse> ms:%s/\<<C-R>=expand("<cword>")<CR>\>//gen<cr>`sviw' |
-            \ endif
 
 "Session
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
