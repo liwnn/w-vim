@@ -59,8 +59,6 @@ if color_name == ''
         if color_name == 'molokai'
             let g:rehash256 = 1
             let g:molokai_original = randnum % 2
-        elseif color_name == 'solarized'
-            exe 'set background=' . ((randnum % 3 == 0) ? 'dark' : 'light')
         end
         exe 'colorscheme ' . color_name
     end
