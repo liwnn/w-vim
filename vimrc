@@ -29,9 +29,7 @@ syntax on
 set number
 set cursorline
 set wildmenu
-if has('balloon_eval')
-    set balloondelay=300
-endif
+set balloondelay=300
 set guioptions-=T
 set guitablabel=%{fnamemodify(bufname(tabpagebuflist(v:lnum)[tabpagewinnr(v:lnum)-1]),':t')}
 set display=lastline
