@@ -78,7 +78,7 @@ autocmd FileType make,go setlocal noexpandtab
 autocmd FileType xml setlocal nowrap
 set tabstop=4
 autocmd FileType python setlocal tabstop=4
-autocmd FileType proto setlocal tabstop=2 | setlocal autoindent
+autocmd FileType proto setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal autoindent
 set foldlevelstart=8
 autocmd BufNewFile,BufRead *.[ch],*.cpp,*.cs,*.java,*.go set foldmethod=syntax
 autocmd BufNewFile,BufRead *.py,*.sh,*.php,*.lua,*.xml set foldmethod=indent
