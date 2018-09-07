@@ -185,6 +185,7 @@ noremap <C-S-TAB> :MBEbp<CR>
 
 "MUcomplete
 let g:mucomplete#enable_auto_at_startup = 1
+let g:mucomplete#completion_delay = 100
 let g:mucomplete#can_complete = {}
 let g:mucomplete#can_complete.go = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\)$' } }
 let g:mucomplete#chains = {}
