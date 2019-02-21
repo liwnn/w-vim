@@ -247,37 +247,38 @@ autocmd BufWritePre *.go exe ':GoImports'
 noremap <silent> <F5> :call CompileRun() <CR>
 noremap <Leader>o :call OpenContainerFolder() <CR><CR>
 func! CompileRun()
-    exec ":w"
-    let g:asyncrun_open = 10
     if &filetype == "lua"
-        exec "AsyncRun lua %"
+        let cmd = "AsyncRun lua %"
     elseif &filetype == "python"
-        exec "AsyncRun -raw python %"
+        let cmd = "AsyncRun -raw python %"
     elseif &filetype == "go"
-        exec "AsyncRun! -raw go run %"
-    elseif &filetype == "objc" || &filetype == "cpp" || &filetype == "c" || &filetype == "cs" || &filetype == "java"
+        let cmd = "AsyncRun! -raw go run %"
+    else
         if &filetype == "objc"
-            exec "AsyncRun g++ -framework Foundation % -o %<"
+            let cmd = "AsyncRun g++ -framework Foundation % -o %<"
         elseif &filetype == "cpp" || &filetype == "c"
             if &filetype == "c"
-                let l:cmd = "AsyncRun gcc % -g -Wall -o %< -std=c11"
+                let cmd = "AsyncRun gcc % -g -Wall -o %< -std=c11"
             else
-                let l:cmd = 'AsyncRun g++ -o %< % -g -Wall -std=c++11 -lpthread'
+                let cmd = 'AsyncRun g++ -o %< % -g -Wall -std=c++11 -lpthread'
             endif
             if g:os == 'win'
-                let l:cmd = l:cmd . ' -lwsock32'
+                let cmd = cmd . ' -lwsock32'
             endif
-            exec l:cmd
         elseif &filetype == "cs"
-            exec "AsyncRun csc % /nologo /utf8output"
+            let cmd = "AsyncRun csc % /nologo /utf8output"
         elseif &filetype == "java"
-            exec "AsyncRun javac %"
+            let cmd = "AsyncRun javac %"
+        else
+            return
         endif
         let g:asyncrun_exit = 'call Run()'
     endif
-    unlet g:asyncrun_open
+    noautocmd silent! exec 'w | botright copen | wincmd k'
+    exec cmd
 endfunc "CompileRun
 func! Run()
+    let g:asyncrun_exit = ''
     if g:asyncrun_status == "success"
         if &filetype == "java"
             exec "AsyncRun java %:r"
@@ -288,7 +289,6 @@ func! Run()
                 exec "AsyncRun ./%<"
             endif
         endif
-        let g:asyncrun_exit = ''
     endif
 endfunc
 function! OpenContainerFolder()
