@@ -242,6 +242,13 @@ let g:go_list_height = 10
 let g:go_fold_enable = ['block', 'import', 'varconst', 'package_comment', 'comment']
 let g:go_gocode_unimported_packages = 1
 autocmd BufWritePre *.go exe ':GoImports'
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_variable_declarations = 1
+let g:go_highlight_variable_assignments = 1
 
 "Tools
 noremap <silent> <F5> :call CompileRun() <CR>
