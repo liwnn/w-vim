@@ -236,12 +236,10 @@ func! SetIndent()
 endfunc
 
 "vim-go
-let g:go_def_mode = 'godef'
+let g:go_fmt_command = "goimports"
+let g:go_gocode_unimported_packages = 1
 let g:go_list_type = 'quickfix'
 let g:go_list_height = 10
-let g:go_fold_enable = ['block', 'import', 'varconst', 'package_comment', 'comment']
-let g:go_gocode_unimported_packages = 1
-autocmd BufWritePre *.go exe ':GoImports'
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
