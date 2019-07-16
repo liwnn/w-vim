@@ -188,9 +188,10 @@ let g:mucomplete#enable_auto_at_startup = 1
 let g:mucomplete#completion_delay = 100
 let g:mucomplete#can_complete = {}
 let g:mucomplete#can_complete.go = { 'omni': { t -> t =~# '\m\k\%(\k\|\.\)$' } }
-let g:mucomplete#chains = {}
+let g:mucomplete#chains = {
+            \ 'sql' : ['path', 'keyn']
+            \}
 if !(has('python') || has('python3'))
-  " Define whatever completion chain you want, but without 'omni':
   let g:mucomplete#chains.python = ['path', 'keyn']
 endif
 
