@@ -259,6 +259,8 @@ func! CompileRun()
         let cmd = "AsyncRun -raw python %"
     elseif &filetype == "go"
         let cmd = "AsyncRun! -raw go run %"
+    elseif &filetype == "php"
+        let cmd = "AsyncRun! -raw php %"
     else
         if &filetype == "objc"
             let cmd = "AsyncRun g++ -framework Foundation % -o %<"
