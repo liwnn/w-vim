@@ -213,8 +213,8 @@ nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
 let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_by_filename = 1
 let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\.git$\|\.hg$\|\.svn$',
-            \ 'file': '\.class$\|\.o$\|\~$\|\.DS_Store'
+            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+            \ 'file': '\v\.(class|o|DS_Store|so|dll|exe)$',
             \ }
 
 "mru
