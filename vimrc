@@ -226,7 +226,7 @@ let g:indentLine_first_char = g:indentLine_char
 let g:indentLine_showFirstIndentLevel = 1
 au BufReadPost * exec "call SetIndent()"
 func! SetIndent()
-    if expand('%:e') == 'log' || getfsize(expand(@%)) > 4 * 1024 * 1024
+    if expand('%:e') == 'log' || expand('%:e') == 'json' || getfsize(expand(@%)) > 4 * 1024 * 1024
         setlocal nowrap
         set guioptions+=b
         let g:indentLine_enabled = 0
