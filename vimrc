@@ -163,7 +163,7 @@ function! MakeSession()
 endfunc
 
 "snipMate
-let g:snippets_dir = $VIMFILES . "/snippets"
+let g:snippets_dir = $VIMFILES . "/pack/plugins/start/snipmate.vim/snippets"
 
 " ale
 let g:ale_lint_on_text_changed = 'normal'
@@ -318,5 +318,5 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'majutsushi/tagbar'
-Plug 'msanders/snipmate.vim'
+Plug 'wining/snipmate.vim'
 call plug#end()
