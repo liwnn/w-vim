@@ -316,4 +316,5 @@ Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'majutsushi/tagbar'
 Plug 'wining/snipmate.vim'
+Plug 'scrooloose/nerdcommenter'
 call plug#end()
