@@ -215,7 +215,7 @@ let MRU_File = $VIMTEMP . '/.vim_mru_files'
 let g:indentLine_char = '¦'
 let g:indentLine_first_char = g:indentLine_char
 let g:indentLine_showFirstIndentLevel = 1
-let g:indentLine_fileTypeExclude = ['', 'json']
+let g:indentLine_fileTypeExclude = ['', 'json', 'help', 'netrw']
 
 "vim-go
 let g:go_fmt_command = "goimports"
