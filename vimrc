@@ -162,16 +162,10 @@ function! MakeSession()
     endif
 endfunc
 
-" ale
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_insert_leave = 1
-
 "Tagbar
-let g:tagbar_width = 32
 let g:tagbar_autofocus = 1
 let g:tagbar_sort = 0
-let g:tagbar_compact = 1
-nnoremap <silent> <F9> :TagbarToggle<CR>
+nmap <silent> <F8> :TagbarToggle<CR>
 
 "Minibufexpl
 let g:miniBufExplMaxSize = 3
@@ -192,16 +186,16 @@ if !(has('python') || has('python3'))
   let g:mucomplete#chains.python = ['path', 'keyn']
 endif
 
-" netrw
+"netrw
 let g:netrw_home=$VIMTEMP
 let g:netrw_sort_sequence = '[\/]$,*'
 let g:netrw_liststyle= 3
 
-"Nerd_commenter
+"NERD Commenter
 let NERDCommentEmptyLines = 1
 let NERDDefaultAlign = 'both' " left start both none
 
-"vbookmark
+"vim-bookmark
 let g:vbookmark_bookmarkSaveFile = $VIMTEMP . '/.vimbookmark'
 nnoremap <silent> <F2> :VbookmarkNext<CR>
 nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
@@ -217,27 +211,18 @@ let g:ctrlp_custom_ignore = {
 "mru
 let MRU_File = $VIMTEMP . '/.vim_mru_files'
 
-"indentline
+"indentLine
 let g:indentLine_char = '¦'
 let g:indentLine_first_char = g:indentLine_char
 let g:indentLine_showFirstIndentLevel = 1
-au BufReadPost * exec "call SetIndent()"
-func! SetIndent()
-    if expand('%:e') == 'log' || expand('%:e') == 'json' || getfsize(expand(@%)) > 4 * 1024 * 1024
-        setlocal nowrap
-        set guioptions+=b
-        let g:indentLine_enabled = 0
-    else
-        set guioptions-=b
-        let g:indentLine_enabled = 1
-    endif
-endfunc
+let g:indentLine_fileTypeExclude = ['', 'json']
 
 "vim-go
 let g:go_fmt_command = "goimports"
 let g:go_gocode_unimported_packages = 1
 let g:go_list_type = 'quickfix'
 let g:go_list_height = 10
+let g:go_rename_command = 'gopls'
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
@@ -310,11 +295,13 @@ endfunc "OpenContainerFolder
 
 call plug#begin("vim/pack/plugins/start")
 Plug 'fatih/vim-go'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'majutsushi/tagbar'
 Plug 'wining/snipmate.vim'
-Plug 'scrooloose/nerdcommenter'
+Plug 'preservim/nerdcommenter'
+Plug 'yegappan/mru'
+Plug 'Yggdroot/indentLine'
 call plug#end()
