@@ -162,10 +162,33 @@ function! MakeSession()
     endif
 endfunc
 
+"netrw
+let g:netrw_home=$VIMTEMP
+let g:netrw_sort_sequence = '[\/]$,*'
+let g:netrw_liststyle= 3
+
 "Tagbar
 let g:tagbar_autofocus = 1
 let g:tagbar_sort = 0
 nmap <silent> <F8> :TagbarToggle<CR>
+
+"NERD Commenter
+let NERDCommentEmptyLines = 1
+let NERDDefaultAlign = 'both' " left start both none
+
+"vim-bookmark
+let g:vbookmark_bookmarkSaveFile = $VIMTEMP . '/.vimbookmark'
+nnoremap <silent> <F2> :VbookmarkNext<CR>
+nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
+
+"mru
+let MRU_File = $VIMTEMP . '/.vim_mru_files'
+
+"indentLine
+let g:indentLine_char = '¦'
+let g:indentLine_first_char = g:indentLine_char
+let g:indentLine_showFirstIndentLevel = 1
+let g:indentLine_fileTypeExclude = ['', 'json', 'help', 'netrw']
 
 "Minibufexpl
 let g:miniBufExplMaxSize = 3
@@ -186,20 +209,6 @@ if !(has('python') || has('python3'))
   let g:mucomplete#chains.python = ['path', 'keyn']
 endif
 
-"netrw
-let g:netrw_home=$VIMTEMP
-let g:netrw_sort_sequence = '[\/]$,*'
-let g:netrw_liststyle= 3
-
-"NERD Commenter
-let NERDCommentEmptyLines = 1
-let NERDDefaultAlign = 'both' " left start both none
-
-"vim-bookmark
-let g:vbookmark_bookmarkSaveFile = $VIMTEMP . '/.vimbookmark'
-nnoremap <silent> <F2> :VbookmarkNext<CR>
-nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
-
 "Ctrlp
 let g:ctrlp_cmd = 'CtrlPMixed'
 let g:ctrlp_by_filename = 1
@@ -208,21 +217,11 @@ let g:ctrlp_custom_ignore = {
             \ 'file': '\v\.(class|o|DS_Store|so|dll|exe)$',
             \ }
 
-"mru
-let MRU_File = $VIMTEMP . '/.vim_mru_files'
-
-"indentLine
-let g:indentLine_char = '¦'
-let g:indentLine_first_char = g:indentLine_char
-let g:indentLine_showFirstIndentLevel = 1
-let g:indentLine_fileTypeExclude = ['', 'json', 'help', 'netrw']
-
 "vim-go
 let g:go_fmt_command = "goimports"
-let g:go_gocode_unimported_packages = 1
+let g:go_rename_command = 'gopls'
 let g:go_list_type = 'quickfix'
 let g:go_list_height = 10
-let g:go_rename_command = 'gopls'
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
