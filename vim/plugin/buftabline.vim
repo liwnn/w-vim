@@ -11,7 +11,7 @@ hi default link BufTabLineFill    TabLineFill
 let g:buftabline_plug_max   = get(g:, 'buftabline_plug_max',  10)
 
 function! buftabline#user_buffers() " help buffers are always unlisted, but quickfix buffers are not
-	return filter(range(1,bufnr('$')),'buflisted(v:val) && "quickfix" !=? getbufvar(v:val, "&buftype")')
+	return filter(range(1,bufnr('$')),'buflisted(v:val) && index(["terminal", "quickfix"], getbufvar(v:val, "&buftype"))<0')
 endfunction
 
 let s:dirsep = fnamemodify(getcwd(),':p')[-1:]
