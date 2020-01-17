@@ -38,6 +38,8 @@ autocmd FileType go setlocal listchars=tab:\¦\ ,trail:·
 set list
 set laststatus=2
 set statusline=%F%m%r%0*%=%0*%k%1*\ %{&filetype}\ %2*\ Ln\ %l\ \ Col\ %c\ \ %L\ %3*\ %{&ff}\ %4*%(\ %{&fenc.(&bomb?\"\(BOM\)\":\"\")}\ %)%*
+noremap <C-TAB> :bn<CR>
+noremap <C-S-TAB> :bp<CR>
 set t_Co=256
 autocmd ColorScheme * hi User1 guifg=#ffffff  guibg=#666666 gui=bold ctermfg=255 ctermbg=243 cterm=bold |
             \ hi User2 guifg=#292b00  guibg=#a4a597 ctermfg=black ctermbg=lightgrey |
@@ -74,7 +76,7 @@ set completeopt=menuone,longest,noinsert
 set cino=:0g0t0(sus
 set mouse=a
 set clipboard=unnamed,unnamedplus
-autocmd FileType make,go setlocal noexpandtab
+autocmd FileType make,go,vim setlocal noexpandtab
 autocmd FileType xml setlocal nowrap
 set tabstop=4
 autocmd FileType python setlocal tabstop=4
@@ -140,11 +142,7 @@ function! MakeSession()
     exe 'cclose'
     let bufcount = 0
     for i in range(1, bufnr('$'))
-        if bufname(i) == '-MiniBufExplorer-'
-            if bufwinnr(i) != -1
-                exe 'bdelete ' . i
-            endif
-        elseif bufname(i) == '__MRU_Files__'
+        if bufname(i) == '__MRU_Files__'
             exe 'bdelete ' . i
         elseif bufname(i) != '' && buflisted(i) == 1
             let bufcount = bufcount + 1
@@ -189,13 +187,6 @@ let g:indentLine_char = '¦'
 let g:indentLine_first_char = g:indentLine_char
 let g:indentLine_showFirstIndentLevel = 1
 let g:indentLine_fileTypeExclude = ['', 'json', 'help', 'netrw']
-
-"Minibufexpl
-let g:miniBufExplMaxSize = 3
-let g:miniBufExplUseSingleClick = 1
-let g:miniBufExplCycleArround = 1
-noremap <C-TAB> :MBEbn<CR>
-noremap <C-S-TAB> :MBEbp<CR>
 
 "MUcomplete
 let g:mucomplete#enable_auto_at_startup = 1
