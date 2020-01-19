@@ -148,12 +148,9 @@ function! MakeSession()
         endif
     endfor
     if bufcount > 1
-        if argc() > 0
-            silent! argdel *
-        endif
         mksession! $VIMTEMP/session.vim
     endif
-    if has("gui_running") && (getwinposx() > 70 || getwinposy() > 30)
+    if has("gui_running")
         let data = &columns . ' '. &lines . ' ' . getwinposx() . ' ' . getwinposy()
         call writefile([data], $VIMTEMP . '/vimsize')
     endif
