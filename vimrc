@@ -118,13 +118,13 @@ set sessionoptions=blank,buffers
 if has("gui_running")
     if g:os != 'mac'
         if filereadable($VIMTEMP . '/vimsize')
-            let sizepos = split(readfile($VIMTEMP . '/vimsize')[0])
+            let sizepos = readfile($VIMTEMP . '/vimsize')
         else
-            let sizepos = ['85','31','500','150']
+            let sizepos = [92, 32, 500, 150]
         endif
-        silent! exe "set columns=".sizepos[0]
-        silent! exe "set lines=".sizepos[1]
-        silent! exe "winpos ".sizepos[2]." ".sizepos[3]
+        silent! exe "set columns=" . sizepos[0]
+        silent! exe "set lines=" . sizepos[1]
+        silent! exe "winpos ". sizepos[2] . " " . sizepos[3]
     endif
 
     if argc() == 0
@@ -151,8 +151,8 @@ function! MakeSession()
         mksession! $VIMTEMP/session.vim
     endif
     if has("gui_running")
-        let data = &columns . ' '. &lines . ' ' . getwinposx() . ' ' . getwinposy()
-        call writefile([data], $VIMTEMP . '/vimsize')
+        let data = [&columns, &lines, getwinposx(), getwinposy()]
+        call writefile(data, $VIMTEMP . '/vimsize')
     endif
 endfunc
 
