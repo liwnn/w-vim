@@ -76,7 +76,7 @@ set completeopt=menuone,longest,noinsert
 set cino=:0g0t0(sus
 set mouse=a
 set clipboard=unnamed,unnamedplus
-autocmd FileType make,go,vim setlocal noexpandtab
+autocmd FileType make,go setlocal noexpandtab
 autocmd FileType xml setlocal nowrap
 set tabstop=4
 autocmd FileType python setlocal tabstop=4
@@ -139,10 +139,9 @@ function! LoadSession(session_file)
     endif
 endfunc
 function! MakeSession()
-    exe 'cclose'
     let bufcount = 0
     for i in range(1, bufnr('$'))
-        if bufname(i) == '__MRU_Files__'
+        if index(['qf', 'mru'], getbufvar(i, "&filetype")) >= 0
             exe 'bdelete ' . i
         elseif bufname(i) != '' && buflisted(i) == 1
             let bufcount = bufcount + 1
@@ -197,7 +196,7 @@ let g:mucomplete#chains = {
             \ 'sql' : ['path', 'keyn']
             \}
 if !(has('python') || has('python3'))
-  let g:mucomplete#chains.python = ['path', 'keyn']
+    let g:mucomplete#chains.python = ['path', 'keyn']
 endif
 
 "Ctrlp
@@ -225,52 +224,31 @@ let g:go_highlight_variable_assignments = 1
 noremap <silent> <F5> :call CompileRun() <CR>
 noremap <Leader>o :call OpenContainerFolder() <CR><CR>
 func! CompileRun()
-    if &filetype == "lua"
-        let cmd = "AsyncRun lua %"
-    elseif &filetype == "python"
-        let cmd = "AsyncRun -raw python %"
-    elseif &filetype == "go"
-        let cmd = "AsyncRun! -raw go run %"
-    elseif &filetype == "php"
-        let cmd = "AsyncRun! -raw php %"
-    else
-        if &filetype == "objc"
-            let cmd = "AsyncRun g++ -framework Foundation % -o %<"
-        elseif &filetype == "cpp" || &filetype == "c"
-            if &filetype == "c"
-                let cmd = "AsyncRun gcc % -g -Wall -o %< -std=c11"
-            else
-                let cmd = 'AsyncRun g++ -o %< % -g -Wall -std=c++11 -lpthread'
-            endif
-            if g:os == 'win'
-                let cmd = cmd . ' -lwsock32'
-            endif
-        elseif &filetype == "cs"
-            let cmd = "AsyncRun csc % /nologo /utf8output"
-        elseif &filetype == "java"
-            let cmd = "AsyncRun javac %"
-        else
-            return
-        endif
-        let g:asyncrun_exit = 'call Run()'
-    endif
+    let cmds = {}
+    let cmds['c'] = 'gcc % -g -Wall -o %< -std=c11' . (g:os == 'win' ? ' -lwsock32' : '')
+    let cmds['objc'] = 'g++ -framework Foundation % -o %<'
+    let cmds['cpp'] = 'g++ -o %< % -g -Wall -std=c++11 -lpthread' . (g:os == 'win' ? ' -lwsock32' : '')
+    let cmds['cs'] = 'csc % /nologo /utf8output'
+    let cmds['java'] = "javac %"
+    let cmds['lua'] = "lua %"
+    let cmds['python'] = "python %"
+    let cmds['go'] = "go run %"
+    let cmds['php'] = "php %"
+    let cmd = get(cmds, &filetype, '')
+    if cmd == '' | return | endif
+    exec 'AsyncRun -raw ' . cmd
     noautocmd silent! exec 'w | botright copen | wincmd k'
-    exec cmd
-endfunc "CompileRun
-func! Run()
-    let g:asyncrun_exit = ''
-    if g:asyncrun_status == "success"
+    if index(['c', 'objc', 'cpp', 'cs', 'java'], &filetype) >= 0
         if &filetype == "java"
-            exec "AsyncRun java %:r"
+            let exist_cmd = 'AsyncRun java %:r'
+        elseif has("gui_running")
+            let exist_cmd = "AsyncRun -mode=4 %<"
         else
-            if g:os == 'win'
-                exec "AsyncRun -mode=4 %<"
-            else
-                exec "AsyncRun ./%<"
-            endif
+            let exist_cmd = "AsyncRun ./%<"
         endif
+        let g:asyncrun_exit = 'let g:asyncrun_exit="" | if g:asyncrun_status=="success" | exec "' . exist_cmd . '" | endif'
     endif
-endfunc
+endfunc "CompileRun
 function! OpenContainerFolder()
     if expand('%') != ""
         if g:os == 'win'
