@@ -46,23 +46,18 @@ autocmd ColorScheme * hi User1 guifg=#ffffff  guibg=#666666 gui=bold ctermfg=255
             \ hi User3 guifg=#ffffff  guibg=#6b7977 ctermfg=255 ctermbg=245 |
             \ hi def link User4 StatusLine |
             \ hi SpecialKey gui=none
-let color_name = ''
-if color_name == ''
-    let arr = []
-    for colorsheme_dir in [$VIMFILES.'/colors']
-        let arr += split(glob(colorsheme_dir.'/*.vim'), '\n')
-    endfor
-    if len(arr) > 0
-        let slash = (g:os == 'win') ? '\' : '/'
-        let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
-        let color_name = split(arr[randnum % len(arr)], slash)[-1][:-5]
-        if color_name == 'molokai'
-            let g:rehash256 = 1
-            let g:molokai_original = randnum % 2
-        end
-        exe 'colorscheme ' . color_name
+let arr = []
+for colorsheme_dir in [$VIMFILES.'/colors']
+    let arr += split(glob(colorsheme_dir.'/*.vim'), '\n')
+endfor
+if len(arr) > 0
+    let slash = (g:os == 'win') ? '\' : '/'
+    let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
+    let color_name = split(arr[randnum % len(arr)], slash)[-1][:-5]
+    if color_name == 'molokai'
+        let g:rehash256 = 1
+        let g:molokai_original = randnum % 2
     end
-elseif color_name != 'default'
     exe 'colorscheme ' . color_name
 end
 
