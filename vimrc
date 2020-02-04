@@ -20,7 +20,7 @@ set autochdir
 set splitright
 set lazyredraw
 set noerrorbells
-set vb t_vb=
+set belloff=all
 set shortmess=filnxtToOc
 filetype plugin indent on
 syntax on
