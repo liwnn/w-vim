@@ -18,6 +18,8 @@ let s:dirsep = fnamemodify(getcwd(),':p')[-1:]
 let s:centerbuf = winbufnr(0)
 function! buftabline#render()
 	let bufnums = buftabline#user_buffers()
+
+	let &g:showtabline = 1 + ( len(bufnums) > 1 )
 	let centerbuf = s:centerbuf " prevent tabline jumping around when non-user buffer current (e.g. help)
 
 	" pick up data on all the buffers
@@ -122,8 +124,7 @@ endfunction
 
 augroup BufTabLine
 	autocmd!
-	autocmd VimEnter,TabEnter  * call buftabline#update(0)
-	autocmd BufAdd    * call buftabline#update(0)
+	autocmd VimEnter,TabEnter,BufAdd * call buftabline#update(0)
 	autocmd BufDelete * call buftabline#update(str2nr(expand('<abuf>')))
 augroup END
 
