@@ -257,7 +257,7 @@ Plug 'fatih/vim-go'
 Plug 'dense-analysis/ale'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
-Plug 'terryma/vim-multiple-cursors'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'majutsushi/tagbar'
 Plug 'wining/snipmate.vim'
 Plug 'preservim/nerdcommenter'
