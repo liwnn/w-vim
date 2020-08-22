@@ -136,7 +136,7 @@ endfunc
 function! MakeSession()
     let bufcount = 0
     for i in range(1, bufnr('$'))
-        if index(['qf', 'mru'], getbufvar(i, "&filetype")) >= 0
+        if getbufvar(i, "&filetype") == 'qf'
             exe 'bdelete ' . i
         elseif bufname(i) != '' && buflisted(i) == 1
             let bufcount = bufcount + 1
@@ -170,9 +170,6 @@ let g:vbookmark_bookmarkSaveFile = $VIMTEMP . '/.vimbookmark'
 nnoremap <silent> <F2> :VbookmarkNext<CR>
 nnoremap <silent> <S-F2> :VbookmarkPrevious<CR>
 
-"mru
-let MRU_File = $VIMTEMP . '/.vim_mru_files'
-
 "indentLine
 let g:indentLine_char = '¦'
 let g:indentLine_first_char = g:indentLine_char
@@ -203,6 +200,7 @@ let g:ctrlp_custom_ignore = {
 let g:go_fmt_command = "goimports"
 let g:go_doc_popup_window = 1
 let g:go_list_type = 'quickfix'
+let g:go_def_reuse_buffer = 1
 let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_functions = 1
@@ -261,6 +259,5 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'majutsushi/tagbar'
 Plug 'wining/snipmate.vim'
 Plug 'preservim/nerdcommenter'
-Plug 'yegappan/mru'
 Plug 'Yggdroot/indentLine'
 call plug#end()
