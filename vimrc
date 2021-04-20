@@ -71,7 +71,6 @@ set completeopt=menuone,longest,noinsert
 set cino=:0g0t0(sus
 set mouse=a
 set clipboard=unnamed,unnamedplus
-set paste
 autocmd FileType make,go setlocal noexpandtab
 autocmd FileType xml setlocal nowrap
 set tabstop=4
