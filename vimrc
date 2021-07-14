@@ -249,7 +249,7 @@ function! OpenContainerFolder()
     endif
 endfunc "OpenContainerFolder
 
-call plug#begin("plugins")
+call plug#begin("~/.vim/plugged")
 Plug 'fatih/vim-go'
 Plug 'dense-analysis/ale'
 Plug 'lifepillar/vim-mucomplete'
