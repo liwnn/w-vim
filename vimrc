@@ -197,6 +197,7 @@ let g:ctrlp_custom_ignore = {
             \ }
 
 "vim-go
+let g:go_fillstruct_mode= 'gopls'
 let g:go_doc_popup_window = 1
 let g:go_list_type = 'quickfix'
 let g:go_def_reuse_buffer = 1
