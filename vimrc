@@ -1,14 +1,18 @@
 "OS
+let s:slash = '/'
+let $VIMFILES=$HOME.'/.vim'
 if has('win32')
+    let g:os = 'win'
     let $VIMFILES=$VIM.'/vimfiles'
     set guifont=consolas:h10
-    let g:os = 'win'
+    let s:slash = '\'
+    let s:openFolder = "!start explorer /select, %"
 elseif has('mac')
-    let $VIMFILES=$HOME.'/.vim'
     let g:os = 'mac'
+    let s:openFolder = "!open $PWD"
 else
-    let $VIMFILES=$HOME.'/.vim'
     let g:os = 'linux'
+    let s:openFolder = "!nautilus $PWD"
 endif
 let $VIMTEMP=$HOME.'/.cache/vimtemp'
 if !isdirectory($VIMTEMP) | call mkdir($VIMTEMP, "p") | endif
@@ -29,6 +33,7 @@ syntax on
 set number
 set cursorline
 set wildmenu
+set wildignore=.git,.svn,.hg,*DS_Store,*.class,*.o,*.so,*.dll,*.exe " 文件搜索和补全时忽略下面扩展名
 set balloondelay=300
 set guioptions-=T
 set guitablabel=%{fnamemodify(bufname(tabpagebuflist(v:lnum)[tabpagewinnr(v:lnum)-1]),':t')}
@@ -51,9 +56,8 @@ for colorsheme_dir in [$VIMFILES.'/colors']
     let arr += split(glob(colorsheme_dir.'/*.vim'), '\n')
 endfor
 if len(arr) > 0
-    let slash = (g:os == 'win') ? '\' : '/'
     let randnum = str2nr(matchstr(reltimestr(reltime()), '\v\.@<=\d+')[1:])
-    let color_name = split(arr[randnum % len(arr)], slash)[-1][:-5]
+    let color_name = split(arr[randnum % len(arr)], s:slash)[-1][:-5]
     if color_name == 'molokai'
         let g:rehash256 = 1
         let g:molokai_original = randnum % 2
@@ -80,7 +84,6 @@ set foldlevelstart=8
 autocmd BufNewFile,BufRead *.[ch],*.cpp,*.cs,*.java,*.go set foldmethod=syntax
 autocmd BufNewFile,BufRead *.py,*.sh,*.php,*.lua,*.xml set foldmethod=indent
 noremap <C-a> ggVG
-nmap <c-s> :w<cr>
 imap <c-s> <esc>:w<cr>a
 vnoremap <C-c> y
 vnoremap <Leader>p "0p
@@ -121,7 +124,6 @@ if has("gui_running")
         silent! exe "set lines=" . sizepos[1]
         silent! exe "winpos ". sizepos[2] . " " . sizepos[3]
     endif
-
     if argc() == 0
         autocmd VimEnter * nested : call LoadSession($VIMTEMP . '/session.vim')
     endif
@@ -188,14 +190,6 @@ if !(has('python') || has('python3'))
     let g:mucomplete#chains.python = ['path', 'keyn']
 endif
 
-"Ctrlp
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_by_filename = 1
-let g:ctrlp_custom_ignore = {
-            \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-            \ 'file': '\v\.(class|o|DS_Store|so|dll|exe)$',
-            \ }
-
 "vim-go
 let g:go_fillstruct_mode= 'gopls'
 let g:go_doc_popup_window = 1
@@ -239,24 +233,20 @@ func! CompileRun()
 endfunc "CompileRun
 function! OpenContainerFolder()
     if expand('%') != ""
-        if g:os == 'win'
-            exe "!start explorer /select, %"
-        elseif g:os == 'mac'
-            exe "!open $PWD"
-        else
-            exe "!nautilus $PWD"
-        endif
+        exe s:openFolder
     endif
 endfunc "OpenContainerFolder
 
-call plug#begin("~/.vim/plugged")
-Plug 'fatih/vim-go'
-Plug 'dense-analysis/ale'
-Plug 'lifepillar/vim-mucomplete'
-Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-Plug 'majutsushi/tagbar'
-Plug 'wining/snipmate.vim'
-Plug 'preservim/nerdcommenter'
-Plug 'Yggdroot/indentLine'
-call plug#end()
+if !empty(glob('~/.vim/autoload/plug.vim'))
+    call plug#begin("~/.vim/plugged")
+    Plug 'fatih/vim-go'
+    Plug 'dense-analysis/ale'
+    Plug 'lifepillar/vim-mucomplete'
+    Plug 'https://github.com/ctrlpvim/ctrlp.vim.git'
+    Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+    Plug 'majutsushi/tagbar'
+    Plug 'wining/snipmate.vim'
+    Plug 'preservim/nerdcommenter'
+    Plug 'Yggdroot/indentLine'
+    call plug#end()
+endif
