@@ -71,12 +71,12 @@ set shiftwidth=4
 set linebreak
 set backspace=indent,eol,start
 set whichwrap=b,s,h,l,<,>,[,]
+set nowrap
 set completeopt=menuone,longest,noinsert
 set cino=:0g0t0(sus
 set mouse=a
 set clipboard=unnamed,unnamedplus
 autocmd FileType make,go setlocal noexpandtab
-autocmd FileType xml setlocal nowrap
 set tabstop=4
 autocmd FileType python setlocal tabstop=4
 autocmd FileType proto setlocal tabstop=2 | setlocal shiftwidth=2 | setlocal autoindent
